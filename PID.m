@@ -7,7 +7,7 @@ function [ v, w, e_d, e_a ] = PID(x, y, theta, goal)
     e_d = sqrt((x-goal(1))^2 + (y-goal(2))^2);
     e_a = (atan2(goal(2) -y , goal(1) -x)) - theta;
     PID_w = kp_w*(e_a);
-    PID_v = kp_v*(e_d) - 3*abs(PID_w) ;
+    PID_v = kp_v*(e_d) ;%- 3*abs(PID_w) ;
     
     
     v = PID_v*(PID_v>=0) + (PID_v<0)*0;

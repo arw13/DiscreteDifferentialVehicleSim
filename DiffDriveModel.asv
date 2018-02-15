@@ -21,28 +21,28 @@ v = x;
 w = v;
 E = [x;x];
 
-goal = [2,2];
+goal = [-2, 2];
 
-prev_state = zeros(10,3);
-% state_storage = zeros(10,2,length(tspan));
+prev_state = zeros(9,3);
+state_storage = zeros(9,3,length(tspan));
 figure(1), clf
 
 for k = 2:length(tspan)
     state_storage(:, :, k) = prev_state;
     % Control
-    %[v(k), w(k), E(1,k), E(2,k)] = PID(x(k-1), y(k-1), theta(k-1), goal);
-    % [v(k), w(k)] = scaled(x(k-1), y(k-1), goal);
-    [v(k), w(k), prev_state] = LADRC(x(k-1), y(k-1), theta(k-1), goal, prev_state, T);
+  %[v(k), w(k), E(1,k), E(2,k)] = PID(x(k-1), y(k-1), theta(k-1), goal);
+  % [v(k), w(k)] = scaled(x(k-1), y(k-1), goal);
+  [v(k), w(k), ] = LADRC(x(k-1), y(k-1), theta(k-1), goal, prev_state, T);
    
     n1 = random('norm', 0, 1);
-    w(k) = w(k)+0;
+    w(k) = w(k)+n1;
         
     %Model
-    theta(k) = theta(k-1) + T/2*(w(k) + w(k-1));
+    theta(k) = theta(k-1) + T/2*(w(k) + w(k-1));;
     x(k) = x(k-1) + T/2*(v(k)*cos(theta(k)) + v(k-1)*cos(theta(k-1)));
     y(k) = y(k-1) + T/2*(v(k)*sin(theta(k)) + v(k-1)*sin(theta(k-1)));
     
-    E(:,k) = [sqrt((x(k)-goal(1))^2 + (y(k)-goal(2))^2); (atan2(goal(2)-y(k),goal(1)-x(k)))-theta(k)];
+    E(:,k) = [sqrt((x(k)-goal(1))^2 + (x(k)-goal(2))^2); (atan2(goal(2)-y(k),goal(1)-x(k)))-theta(k)];
     
    if  sqrt((x(k)-goal(1))^2 + (y(k)-goal(2))^2) < .05
     fprintf('Success \n')
@@ -58,8 +58,7 @@ for k = 2:length(tspan)
 %     pause(.1) 
 %     axis equal 
 end
-min_err = min(abs(E(:,2:end)), [], 2);
-fprintf('%f %f \n' , min_err)
+
 %% Plot
 t = dt*(0:k-1);
 figure(1), clf
@@ -103,40 +102,7 @@ subplotfill(2,1,2);
 plot(t,w)
 ylabel('Angular Vel')
 
-figure(5), clf
+figure(5);
 subplotfill(3,1,1);
-title('Z1 vs Actual')
 hold on 
-plot(t,squeeze(state_storage(1,1,:)))
-plot(t,x, 'r')
-ylabel('x')
-subplotfill(3,1,2);
-hold on 
-plot(t,squeeze(state_storage(1,2,:)))
-plot(t,y, 'r')
-ylabel('y')
-subplotfill(3,1,3);
-hold on 
-plot(t,squeeze(state_storage(1,3,:)))
-plot(t,theta, 'r')
-ylabel('theta')
-xlabel('time')
-
-figure(6), clf
-subplotfill(3,1,1);
-title('Z1 vs SetPoint')
-hold on 
-plot(t,squeeze(state_storage(1,1,:)))
-plot(t,squeeze(state_storage(10,1,:)), 'r')
-ylabel('x')
-subplotfill(3,1,2);
-hold on 
-plot(t,squeeze(state_storage(1,2,:)))
-plot(t,squeeze(state_storage(10,2,:)), 'r')
-ylabel('y')
-subplotfill(3,1,3);
-hold on 
-plot(t,squeeze(state_storage(1,3,:)))
-plot(t,squeeze(state_storage(10,3,:)), 'r')
-ylabel('theta')
-xlabel('time')
+plot(state_storage(1,1,:))
