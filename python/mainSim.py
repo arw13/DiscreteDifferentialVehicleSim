@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from controllers import PID
+from controllers import PID, LADRC
 import pdb
 
 ## Initializations
@@ -30,15 +30,17 @@ w_ = (r/L)*(ur-ul) # angular velocity
 
 goal = [-5, 4]
 
+prev_state = np.zeros((10,3));
 
 
 
 for k in range(1,n):
     # PID Control
-    v[k], w[k], e_d[k], e_a[k] = PID(x[k-1], y[k-1], theta[k-1], goal)
+    #v[k], w[k], e_d[k], e_a[k] = PID(x[k-1], y[k-1], theta[k-1], goal)
 
+    #LADRC control
+    v[k], w[k], prev_state = LADRC(x[k-1], y[k-1], theta[k-1], goal, prev_state, T);
 
-    # [v[k], w[k]] = scaled(x[k-1], y[k-1], goal);
     # pdb.set_trace()
 
     #Model
