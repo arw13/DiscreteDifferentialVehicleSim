@@ -5,17 +5,17 @@ import pdb
 def PID(x, y, theta, goal):
 # PID for a differential drive robot
     kp_v = 1
-    kp_w = 10
+    kp_w = 15
     # pdb.set_trace()
 
 
     e_d = np.sqrt((x-goal[0])**2 + (y-goal[1])**2)
     e_a = (np.arctan2(goal[1] -y , goal[0] -x)) - theta
     PID_w = kp_w*(e_a)
-    PID_v = kp_v*(e_d) - 3*abs(PID_w)
+    PID_v = kp_v*(e_d) #- 3*abs(PID_w)
 
-    v = PID_v*(PID_v>=0) + (PID_v<0)*0
-    w = PID_w*(abs(PID_w)<=np.pi) + (abs(PID_w)>np.pi)*np.pi
+    v = PID_v#*(PID_v>=0) + (PID_v<0)*0
+    w = PID_w#*(abs(PID_w)<=np.pi) + (abs(PID_w)>np.pi)*np.pi
 
     return v, w, e_d, e_a
 
@@ -23,7 +23,7 @@ def PID(x, y, theta, goal):
 
 def LADRC(X,Y,theta, goal, prev_state,T):
 
-    ''' Linear Advanced Distrubance Rejection Control '''
+    ''' Linear Advanced Disturbance Rejection Control '''
     fs = 1/T
     K = 2/T
 
@@ -43,11 +43,11 @@ def LADRC(X,Y,theta, goal, prev_state,T):
 
     # Tunable gains
     b0 = 80
-    wc = np.mat([[1, 0, 0],[0, 1, 0], [0, 0, 5]]) # < .1*fs
-    wo = np.mat([[15, 0, 0], [0, 15, 0], [0, 0, 15]]) #5*wc # ~ 5-10 wc
+    wc = np.mat([[2.5, 0, 0],[0, 2.5, 0], [0, 0, 5]]) # < .1*fs
+    wo = np.mat([[15, 0, 0], [0, 15, 0], [0, 0, 30]]) #5*wc # ~ 5-10 wc
 
     # PID Gains
-    zeta = np.mat([[1, 0, 0],[0, 1, 0], [0, 0, 0.5]])
+    zeta = np.mat([[1, 0, 0],[0, 1, 0], [0, 0, 1]])
     kd = 2*zeta*wc
     kp = wc**2
 
@@ -84,6 +84,6 @@ def LADRC(X,Y,theta, goal, prev_state,T):
     cur_state[9,:] = r.transpose()
 
     v = np.sqrt(u[0]**2+u[1]**2)#*(u[1]>=0) + (u[1]<0)*0
-    w = u[2]
+    w = u[2]/(10*T)
 
     return v, w, cur_state
