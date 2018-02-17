@@ -17,6 +17,8 @@ def PID(x, y, theta, goal):
     v = PID_v#*(PID_v>=0) + (PID_v<0)*0
     w = PID_w#*(abs(PID_w)<=np.pi) + (abs(PID_w)>np.pi)*np.pi
 
+
+
     return v, w, e_d, e_a
 
 
@@ -43,11 +45,11 @@ def LADRC(X,Y,theta, goal, prev_state,T):
 
     # Tunable gains
     b0 = 80
-    wc = np.mat([[2.5, 0, 0],[0, 2.5, 0], [0, 0, 5]]) # < .1*fs
+    wc = np.mat([[2.5, 0, 0],[0, 2.5, 0], [0, 0, 10]]) # < .1*fs
     wo = np.mat([[15, 0, 0], [0, 15, 0], [0, 0, 30]]) #5*wc # ~ 5-10 wc
 
     # PID Gains
-    zeta = np.mat([[1, 0, 0],[0, 1, 0], [0, 0, 1]])
+    zeta = np.mat([[1, 0, 0],[0, 1, 0], [0, 0, 0.5]])
     kd = 2*zeta*wc
     kp = wc**2
 

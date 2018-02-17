@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from controllers import PID, LADRC
 import pdb
+import time
 
 ## Initializations
 r = .05 # wheel radius, m
@@ -35,12 +36,18 @@ state_storage = np.zeros([10,3,n])
 
 
 for k in range(1,n):
-    # PID Control
-    v[k], w[k], e_d[k], e_a[k] = PID(x[k-1], y[k-1], theta[k-1], goal)
+    state_storage[:,:,k] = prev_state
 
-    #LADRC control
-    # v[k], w[k], prev_state = LADRC(x[k-1], y[k-1], theta[k-1], goal, prev_state, T);
-    w[k] = 10*np.random.rand() +w[k]
+    '''PID Control'''
+    # v[k], w[k], e_d[k], e_a[k] = PID(x[k-1], y[k-1], theta[k-1], goal)
+    # prev_state[9,0] = goal[0]
+    # prev_state[9,1] = goal[1]
+    # prev_state[9,2] = np.arctan2(goal[1] -y[k] , goal[0] -x[k])
+
+
+    '''LADRC control'''
+    v[k], w[k], prev_state = LADRC(x[k-1], y[k-1], theta[k-1], goal, prev_state, T);
+    w[k] = 20*np.sin(.1*k) +w[k]
     # pdb.set_trace()
 
     #Model
@@ -52,19 +59,12 @@ for k in range(1,n):
        print('Success \n')
        break
 
-    #real time plot
-#     figure(1)
-#     hold on
-#     plot(x[k], y[k], 'bo')
-#     plot(goal(1), goal(2), 'go', 'MarkerSize', 10, 'MarkerFaceColor','g')
-#     title('Position Map')
-#     pause(.1)
-#     axis equal
+
 
 
 ## Plot
 
-t = [dt*i for i in range(k-1)]
+t = [dt*i for i in range(k)]
 plt.figure(1)
 plt.plot(x, y, 'bo')
 plt.plot(goal[0], goal[1], 'go')
@@ -72,36 +72,27 @@ plt.title('Position Map')
 plt.xlabel('x')
 plt.ylabel('y')
 
-plt.show()
+plt.figure(2)
+plt.subplot(311)
+plt.plot(t,x[:k])
+plt.plot(t,state_storage[9,0,:k])
+plt.ylabel('xpos')
+plt.subplot(312)
+plt.plot(t,y[:k])
+plt.plot(t,state_storage[9,1,:k])
+plt.ylabel('ypos')
+plt.subplot(313)
+plt.plot(t,theta[:k])
+plt.plot(t,state_storage[9,2,:k])
+plt.xlabel('time')
+plt.ylabel('theta')
 
-# figure(2), clf
-# subplotfill(3,1,1);
-# plot(t,x)
-# ylabel('xpos')
-# subplotfill(3,1,2);
-# plot(t,y)
-# ylabel('ypos')
-# subplotfill(3,1,3);
-# plot(t, theta)
-# ylabel('theta')
-# xlabel('time')
-#
-# figure(3), clf
-# subplotfill(2,1,1);
-# plot(t,E(1, :))
-# ylabel('Pos Error')
-# subplotfill(2,1,2);
-# plot(t,E(2,:))
-# ylabel('Theta Error')
-#
-# figure(4), clf
-# subplotfill(2,1,1);
-# plot(t,v)
-# ylabel('Linear Vel')
-# subplotfill(2,1,2);
-# plot(t,w)
-# ylabel('Angular Vel')
-#
+
+plt.show(block=False)
+time.sleep(8)
+
+# plt.close('all')
+
 # figure(5), clf
 # subplotfill(3,1,1);
 # title('Z1 vs Actual')
