@@ -28,19 +28,19 @@ w_ = (r/L)*(ur-ul) # angular velocity
 
 
 
-goal = [1, 2]
+goal = [1, 3]
 
 prev_state = np.mat(np.zeros((10,3)))
-
+state_storage = np.zeros([10,3,n])
 
 
 for k in range(1,n):
     # PID Control
-    #v[k], w[k], e_d[k], e_a[k] = PID(x[k-1], y[k-1], theta[k-1], goal)
+    v[k], w[k], e_d[k], e_a[k] = PID(x[k-1], y[k-1], theta[k-1], goal)
 
     #LADRC control
-    v[k], w[k], prev_state = LADRC(x[k-1], y[k-1], theta[k-1], goal, prev_state, T);
-
+    # v[k], w[k], prev_state = LADRC(x[k-1], y[k-1], theta[k-1], goal, prev_state, T);
+    w[k] = 10*np.random.rand() +w[k]
     # pdb.set_trace()
 
     #Model
