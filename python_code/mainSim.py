@@ -28,9 +28,9 @@ w_ = (r/L)*(ur-ul) # angular velocity
 
 
 
-goal = [-5, 4]
+goal = [1, 2]
 
-prev_state = np.zeros((10,3));
+prev_state = np.mat(np.zeros((10,3)))
 
 
 
@@ -74,8 +74,6 @@ plt.ylabel('y')
 
 plt.show()
 
-#
-#
 # figure(2), clf
 # subplotfill(3,1,1);
 # plot(t,x)
@@ -103,3 +101,41 @@ plt.show()
 # subplotfill(2,1,2);
 # plot(t,w)
 # ylabel('Angular Vel')
+#
+# figure(5), clf
+# subplotfill(3,1,1);
+# title('Z1 vs Actual')
+# hold on
+# plot(t,squeeze(state_storage(1,1,:)))
+# plot(t,x, 'r')
+# ylabel('x')
+# subplotfill(3,1,2);
+# hold on
+# plot(t,squeeze(state_storage(1,2,:)))
+# plot(t,y, 'r')
+# ylabel('y')
+# subplotfill(3,1,3);
+# hold on
+# plot(t,squeeze(state_storage(1,3,:)))
+# plot(t,theta, 'r')
+# ylabel('theta')
+# xlabel('time')
+#
+# figure(6), clf
+# subplotfill(3,1,1);
+# title('Z1 vs SetPoint')
+# hold on
+# plot(t,squeeze(state_storage(1,1,:)))
+# plot(t,squeeze(state_storage(10,1,:)), 'r')
+# ylabel('x')
+# subplotfill(3,1,2);
+# hold on
+# plot(t,squeeze(state_storage(1,2,:)))
+# plot(t,squeeze(state_storage(10,2,:)), 'r')
+# ylabel('y')
+# subplotfill(3,1,3);
+# hold on
+# plot(t,squeeze(state_storage(1,3,:)))
+# plot(t,squeeze(state_storage(10,3,:)), 'r')
+# ylabel('theta')
+# xlabel('time')
