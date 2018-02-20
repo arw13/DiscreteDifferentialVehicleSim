@@ -22,11 +22,13 @@ e_a = np.zeros(n)
 e_d = np.zeros(n)
 
 ## Differential Drive relations
-ur = 1*(2*np.pi) # right wheel velocity rad/s
-ul = 1.1*(2*np.pi) # left wheel velocity rad/s
+ur = (2*np.pi) # right wheel velocity rad/s
+ul = (2*np.pi) # left wheel velocity rad/s
 v_ = (r/2)*(ur+ul) # linear velocity
 w_ = (r/L)*(ur-ul) # angular velocity
 
+vel_r = ((2.0*v(i)) + (w(i)*robot_width))/(wheel_dia);
+vel_l = ((2.0*v(i)) - (w(i)*robot_width))/(wheel_dia);
 
 
 goal = [1, 3]
