@@ -2,7 +2,7 @@
 clear 
 clc
 
-%% Bilinear Model
+%% Vheicle Dims and Relatins
 r = .05; % wheel radius, m
 L = .2; %distance between wheels, m
 dt = 0.01; % s
@@ -13,6 +13,7 @@ ul = 1.1*(2*pi);
 v_ = (r/2)*(ur+ul);
 w_ = (r/L)*(ur-ul);
 
+%% Model States
 tspan = ones(1,500);
 x = 0;%zeros(1,length(tspan));
 y = x;
@@ -21,10 +22,15 @@ v = x;
 w = v;
 E = [x;x];
 
-goal = [2,2];
 
+
+%% State Storage
 prev_state = zeros(10,3);
 % state_storage = zeros(10,2,length(tspan));
+
+%% Goal!
+goal = [2,2];
+
 figure(1), clf
 
 for k = 2:length(tspan)
